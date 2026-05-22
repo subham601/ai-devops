@@ -6,9 +6,9 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: "file:///home/cis/ai-devops-project/helm"
-    targetRevision: ""
-    path: "ecommerce"
+    repoURL: "https://github.com/subham601/ai-devops.git"
+    targetRevision: HEAD
+    path: "helm/ecommerce"
   destination:
     server: "https://kubernetes.default.svc"
     namespace: ecommerce-system
