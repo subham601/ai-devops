@@ -14,6 +14,7 @@ USERS: dict[str, User] = {
 
 # Demo password (plain text for demo simplicity)
 USER_PASSWORDS: dict[str, str] = {
-    "demo@example.com": "password123"
+    # Keep in sync with backend/tests/test_auth_and_cart.py
+    "demo@example.com": "demo123"
 }
 
