@@ -52,6 +52,17 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
+      - name: Debug IMAGE_REPO (sanity check)
+        run: |
+          echo "IMAGE_REPO=${IMAGE_REPO}"
+          # Prevent malformed repo names containing spaces or leading slashes
+          case "${IMAGE_REPO}" in
+            */ai-devops-project-web) ;;
+            /*) echo "ERROR: IMAGE_REPO has leading slash: ${IMAGE_REPO}"; exit 1 ;;
+            *"/ai-devops-project-web") echo "ERROR: IMAGE_REPO has malformed leading part: ${IMAGE_REPO}"; exit 1 ;;
+            *) echo "ERROR: IMAGE_REPO does not match expected pattern <user>/ai-devops-project-web: ${IMAGE_REPO}"; exit 1 ;;
+          esac
+
       - name: Build Docker image
         run: |
           docker build -t "${IMAGE_REPO}:${IMAGE_TAG}" -t "${IMAGE_REPO}:latest" -f backend/Dockerfile .
@@ -65,30 +76,44 @@ jobs:
         run: |
           python - <<'PY'
           import pathlib, re
+
           values_path = pathlib.Path("helm/ecommerce/values.yaml")
           text = values_path.read_text()
 
-          # Update only the tag field to the commit SHA
-          # Expected structure:
-          # image:
-          #   repository: ...
-          #   tag: latest
+          # Update ONLY the tag under the top-level `image:` block.
+          # This prevents accidentally modifying `image.repository`.
+          pattern = r"(?ms)^image:\n(?P<body>(?:^[ \t].*\n)+)"
+          m = re.search(pattern, text)
+          if not m:
+            raise SystemExit("Failed to find top-level `image:` block in helm/ecommerce/values.yaml")
+
+          body = m.group("body")
+
+          # Ensure we never touch repository
+          repo_pattern = r"(?m)^(\s*repository:\s*)([^\n]*)(\s*)$"
+          if not re.search(repo_pattern, body):
+            raise SystemExit("Missing `image.repository` inside image block")
+
+          # Replace ONLY tag line inside image block
           def repl_tag(match):
-            return match.group(1) + match.group(2) + "${IMAGE_TAG}" + match.group(3)
+            return match.group(1) + "${IMAGE_TAG}" + match.group(3)
 
-          # Safer: replace the first `tag:` under `image:` block
-          new_text = re.sub(
+          new_body, n = re.subn(
               r"(?m)^(\s*tag:\s*)([^\n]*)(\s*)$",
-              lambda m: m.group(1) + "${IMAGE_TAG}" + m.group(3),
-              text,
-              count=1
+              repl_tag,
+              body,
+              count=1,
           )
+          if n != 1:
+            raise SystemExit(f"Failed to replace exactly 1 `image.tag` line (replaced {n})")
 
+          # Reconstruct file
+          new_text = text[:m.start("body")] + new_body + text[m.end("body"):]
           if new_text == text:
-            raise SystemExit("Failed to update image.tag in values.yaml")
+            raise SystemExit("values.yaml unchanged after tag update")
 
           values_path.write_text(new_text)
-          print("Updated", values_path)
+          print("Updated image.tag in", values_path)
           PY
 
       - name: Helm lint

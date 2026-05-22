@@ -1,9 +1,9 @@
 namespace: ecommerce-system
 
 image:
-  repository: ai-devops-project-web
-  tag: ${IMAGE_TAG}
-  pullPolicy: IfNotPresent
+  repository: shubham379/ai-devops-project-web
+  tag: latest
+  pullPolicy: Always
 
 replicaCount: 1
 
@@ -46,4 +46,3 @@ hpa:
 
 networkPolicy:
   enabled: true
-
