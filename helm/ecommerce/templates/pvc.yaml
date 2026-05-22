@@ -1,0 +1,16 @@
+{{- if .Values.persistence.enabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: ecommerce-pvc
+  namespace: {{ .Values.namespace }}
+spec:
+  accessModes:
+{{- toYaml .Values.persistence.accessModes | nindent 4 }}
+  resources:
+    requests:
+      storage: {{ .Values.persistence.size }}
+  storageClassName: {{ .Values.persistence.storageClassName | quote }}
+  volumeName: ecommerce-pv
+{{- end }}
+

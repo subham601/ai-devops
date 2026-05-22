@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ecommerce-config
+  namespace: ecommerce-system
+data:
+  # Optional app-level configuration (safe defaults)
+  # These may be referenced by the app via env vars.
+  APP_NAME: "ecommerce"
+

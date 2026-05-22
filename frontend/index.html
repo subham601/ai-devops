@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ecommerce Demo</title>
+  <link rel="stylesheet" href="/assets/styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">Ecommerce Demo</div>
+    <nav class="nav">
+      <a class="nav-link" href="/">Products</a>
+      <a class="nav-link" href="/cart.html">Cart</a>
+      <button id="logoutBtn" class="nav-link btn-link" type="button">Logout</button>
+    </nav>
+  </header>
+
+  <main class="container">
+    <section class="card">
+      <h1>Products</h1>
+      <div id="status" class="muted"></div>
+      <div id="products" class="grid"></div>
+    </section>
+  </main>
+
+  <script src="/assets/app.js"></script>
+  <script>
+    window.__PAGE__ = 'products';
+    window.addEventListener('DOMContentLoaded', () => App.init());
+  </script>
+</body>
+</html>
+

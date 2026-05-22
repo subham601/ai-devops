@@ -1,0 +1,18 @@
+{{- if .Values.persistence.enabled }}
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: ecommerce-pv
+spec:
+
+  capacity:
+    storage: {{ .Values.persistence.size }}
+  accessModes:
+{{- toYaml .Values.persistence.accessModes | nindent 4 }}
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: ""
+  volumeMode: Filesystem
+  hostPath:
+    path: {{ .Values.persistence.hostPath }}
+{{- end }}
+

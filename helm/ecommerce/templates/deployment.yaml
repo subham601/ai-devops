@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "ecommerce.fullname" . }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "ecommerce.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ include "ecommerce.name" . }}
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: {{ include "ecommerce.name" . }}
+    spec:
+      containers:
+        - name: ecommerce
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - containerPort: 8000
+              name: http
+          envFrom:
+            - configMapRef:
+                name: ecommerce-config
+            - secretRef:
+                name: ecommerce-secret
+          resources:
+{{- toYaml .Values.resources | nindent 12 }}
+          volumeMounts:
+            - name: ecommerce-data
+              mountPath: /data
+          readinessProbe:
+            httpGet:
+              path: /api/products
+              port: http
+            initialDelaySeconds: 3
+            periodSeconds: 5
+            timeoutSeconds: 2
+            failureThreshold: 3
+          livenessProbe:
+            httpGet:
+              path: /api/products
+              port: http
+            initialDelaySeconds: 12
+            periodSeconds: 10
+            timeoutSeconds: 2
+            failureThreshold: 3
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: false
+      volumes:
+        - name: ecommerce-data
+          persistentVolumeClaim:
+            claimName: ecommerce-pvc
+

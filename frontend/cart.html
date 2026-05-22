@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cart - Ecommerce Demo</title>
+  <link rel="stylesheet" href="/assets/styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">Ecommerce Demo</div>
+    <nav class="nav">
+      <a class="nav-link" href="/">Products</a>
+      <a class="nav-link active" href="/cart.html">Cart</a>
+      <button id="logoutBtn" class="nav-link btn-link" type="button">Logout</button>
+    </nav>
+  </header>
+
+  <main class="container">
+    <section class="card">
+      <h1>Your Cart</h1>
+      <div id="cartStatus" class="muted"></div>
+      <div id="cartItems" class="cart"></div>
+      <div class="cart-total">
+        <div>Total:</div>
+        <div id="cartTotal">$0.00</div>
+      </div>
+    </section>
+  </main>
+
+  <script src="/assets/app.js"></script>
+  <script>
+    window.__PAGE__ = 'cart';
+    window.addEventListener('DOMContentLoaded', () => App.init());
+  </script>
+</body>
+</html>
+

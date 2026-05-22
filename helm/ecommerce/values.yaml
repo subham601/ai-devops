@@ -1,0 +1,49 @@
+namespace: ecommerce-system
+
+image:
+  repository: ai-devops-project-web
+  tag: latest
+  pullPolicy: IfNotPresent
+
+replicaCount: 1
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 500m
+    memory: 256Mi
+
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 8000
+
+ingress:
+  enabled: true
+  host: ecommerce.local
+  path: /
+  ingressClassName: traefik
+
+jwtSecret:
+  # NOTE: For production, use --set or a secret management solution.
+  value: change-me
+
+persistence:
+  enabled: true
+  size: 1Gi
+  storageClassName: ""
+  hostPath: /tmp/ecommerce-data
+  accessModes:
+    - ReadWriteOnce
+
+hpa:
+  enabled: true
+  minReplicas: 1
+  maxReplicas: 3
+  targetCPUUtilizationPercentage: 60
+
+networkPolicy:
+  enabled: true
+

@@ -1,0 +1,11 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    ports:
+      - "3001:8000"
+    environment:
+      - JWT_SECRET=change-me
+    restart: unless-stopped
+
