@@ -8,5 +8,7 @@ ecommerce
 
 {{- define "ecommerce.labels" -}}
 app: {{ include "ecommerce.name" . }}
-{{- end -}}
+{{- end }}
+
+
 

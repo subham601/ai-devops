@@ -65,12 +65,15 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build -t "${IMAGE_REPO}:${IMAGE_TAG}" -t "${IMAGE_REPO}:latest" -f backend/Dockerfile .
+          docker build -t "${IMAGE_REPO}:${IMAGE_TAG}" -f backend/Dockerfile .
+
+
+
 
       - name: Push Docker image
         run: |
           docker push "${IMAGE_REPO}:${IMAGE_TAG}"
-          docker push "${IMAGE_REPO}:latest"
+
 
       - name: Update Helm values.yaml image tag
         run: |

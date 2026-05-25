@@ -10,7 +10,15 @@ spec:
   resources:
     requests:
       storage: {{ .Values.persistence.size }}
+{{- if .Values.persistence.storageClassName }}
   storageClassName: {{ .Values.persistence.storageClassName | quote }}
+{{- else }}
+  storageClassName: null
+{{- end }}
   volumeName: ecommerce-pv
 {{- end }}
+
+
+
+
 

@@ -10,9 +10,13 @@ spec:
   accessModes:
 {{- toYaml .Values.persistence.accessModes | nindent 4 }}
   persistentVolumeReclaimPolicy: Retain
-  storageClassName: ""
+{{- if .Values.persistence.storageClassName }}
+  storageClassName: {{ .Values.persistence.storageClassName | quote }}
+{{- end }}
   volumeMode: Filesystem
   hostPath:
     path: {{ .Values.persistence.hostPath }}
 {{- end }}
+
+
 

@@ -11,12 +11,10 @@ spec:
   policyTypes:
     - Ingress
   ingress:
-    - from:
-        - namespaceSelector:
-            matchLabels:
-              name: {{ .Values.namespace }}
-      ports:
-        - protocol: TCP
-          port: 8000
+    - {}
 {{- end }}
+
+
+
+
 

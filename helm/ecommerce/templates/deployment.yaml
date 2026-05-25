@@ -4,12 +4,13 @@ metadata:
   name: {{ include "ecommerce.fullname" . }}
   namespace: {{ .Values.namespace }}
   labels:
-    {{- include "ecommerce.labels" . | nindent 4 }}
+    app: ecommerce
+
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app: {{ include "ecommerce.name" . }}
+      app: ecommerce
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -18,19 +19,11 @@ spec:
   template:
     metadata:
       labels:
-        app: {{ include "ecommerce.name" . }}
-        image-repository: {{ .Values.image.repository | quote }}
-        image-tag: {{ .Values.image.tag | quote }}
+        app: ecommerce
     spec:
       containers:
-
-
         - name: ecommerce
-{{- if contains "${IMAGE_TAG}" .Values.image.tag }}
-          image: "{{ .Values.image.repository }}:latest"
-{{- else }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-{{- end }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - containerPort: 8000
@@ -50,6 +43,7 @@ spec:
               path: /api/products
               port: http
             initialDelaySeconds: 3
+
             periodSeconds: 5
             timeoutSeconds: 2
             failureThreshold: 3
