@@ -2,7 +2,7 @@ namespace: ecommerce-system
 
 image:
   repository: shubham379/ai-devops-project-web
-  tag: "5215d90"
+  tag: ${IMAGE_TAG}
   pullPolicy: Always
 
 replicaCount: 1
