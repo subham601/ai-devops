@@ -23,6 +23,8 @@ spec:
         image-tag: {{ .Values.image.tag | quote }}
     spec:
       containers:
+
+
         - name: ecommerce
 {{- if contains "${IMAGE_TAG}" .Values.image.tag }}
           image: "{{ .Values.image.repository }}:latest"
