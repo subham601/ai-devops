@@ -2,7 +2,7 @@ namespace: ecommerce-system
 
 image:
   repository: shubham379/ai-devops-project-web
-  tag: "v1"
+  tag: "v2"
   pullPolicy: Always
 
 replicaCount: 1
