@@ -110,10 +110,11 @@ jobs:
           # Reconstruct file
           new_text = text[:m.start("body")] + new_body + text[m.end("body"):]
           if new_text == text:
-            raise SystemExit("values.yaml unchanged after tag update")
+            print("values.yaml already has desired image.tag; no update needed")
+          else:
+            values_path.write_text(new_text)
+            print("Updated image.tag in", values_path)
 
-          values_path.write_text(new_text)
-          print("Updated image.tag in", values_path)
           PY
 
       - name: Helm lint
