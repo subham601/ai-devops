@@ -24,12 +24,11 @@ spec:
     spec:
       containers:
         - name: ecommerce
-          {{- $rawTag := .Values.image.tag | default "latest" -}}
-          {{- $resolvedTag := $rawTag -}}
-          {{- if contains "${IMAGE_TAG}" $rawTag -}}
-          {{- $resolvedTag = "latest" -}}
-          {{- end -}}
-          image: "{{ .Values.image.repository }}:{{ $resolvedTag }}"
+{{- if contains "${IMAGE_TAG}" .Values.image.tag }}
+          image: "{{ .Values.image.repository }}:latest"
+{{- else }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+{{- end }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - containerPort: 8000
