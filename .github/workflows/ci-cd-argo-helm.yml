@@ -102,7 +102,12 @@ jobs:
             raise SystemExit("Missing `image.repository` inside image block")
 
           def repl_tag(match):
-            return match.group(1) + f"\"{next_tag}\"" + match.group(3)
+            # group(2) is the old tag content; group(1) contains "tag:" + whitespace
+            old_val = match.group(2).strip()
+            if old_val.startswith('"') and old_val.endswith('"'):
+              return match.group(1) + f"\"{next_tag}\"" + match.group(3)
+            return match.group(1) + next_tag + match.group(3)
+
 
           new_body, n = re.subn(
               r"(?m)^(\s*tag:\s*)([^\n]*?)(\s*)$",

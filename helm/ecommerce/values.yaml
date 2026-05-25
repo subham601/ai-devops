@@ -2,13 +2,8 @@ namespace: ecommerce-system
 
 image:
   repository: shubham379/ai-devops-project-web
-<<<<<<< HEAD
-  tag: ${IMAGE_TAG}
-=======
   tag: "v1"
->>>>>>> e5844b8 (Switch CI/CD to automatic v1 v2 v3 image tagging)
   pullPolicy: Always
-
 
 replicaCount: 1
 
